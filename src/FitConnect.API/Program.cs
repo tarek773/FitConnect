@@ -1,37 +1,34 @@
+﻿using Scalar.AspNetCore; // ضفنا السطر ده فوق
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(); // خدمة الـ OpenAPI
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+// ده السطر اللي بيخلي الـ API يوصف نفسه (JSON)
+app.MapOpenApi();
 
-app.UseHttpsRedirection();
+// ده السطر اللي بيفتح لك واجهة تجربة الـ API (Scalar)
+// هتفتح من اللينك ده: http://localhost:5000/scalar/v1
+app.MapScalarApiReference();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// وقفنا الـ Https عشان الدوكر
+// app.UseHttpsRedirection(); 
+
+var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             Random.Shared.Next(-20, 55),
             summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
+        )).ToArray();
     return forecast;
-})
-.WithName("GetWeatherForecast");
+}).WithName("GetWeatherForecast");
 
 app.Run();
 
