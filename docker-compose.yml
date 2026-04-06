@@ -1,0 +1,24 @@
+services:
+  # خدمة قاعدة البيانات
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fitconnect-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=FitConnect@Pass123
+    ports:
+      - "1433:1433"
+
+  # خدمة الـ API
+  api:
+    image: fitconnect-api-image
+    build:
+      context: ./src/FitConnect.API
+      dockerfile: Dockerfile
+    container_name: fitconnect-api
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=FitConnectDb;User Id=sa;Password=FitConnect@Pass123;TrustServerCertificate=True;

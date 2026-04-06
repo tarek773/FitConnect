@@ -1,0 +1,6 @@
+@FitConnect.API_HostAddress = http://localhost:5140
+
+GET {{FitConnect.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
